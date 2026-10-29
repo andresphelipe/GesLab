@@ -53,6 +53,7 @@ export default function NuevaSesion() {
   const [reactivos, setReactivos] = useState<Linea[]>([lineaVacia(), lineaVacia()])
   const [materiales, setMateriales] = useState<Linea[]>([lineaVacia()])
   const [mensaje, setMensaje] = useState<string | null>(null)
+  const [mostrarErrores, setMostrarErrores] = useState(false)
 
   const set = (campo: keyof typeof f, valor: string) => setF((p) => ({ ...p, [campo]: valor }))
   const mesasN = num(f.mesas) ?? 0
@@ -183,10 +184,31 @@ export default function NuevaSesion() {
     }
   }
 
-  const inputCss =
-    'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500'
-  const req = <span className="text-red-500"> *</span>
-  const lbl = 'mb-1 block text-sm font-medium text-gray-700'
+  const faltanSet = useMemo(() => {
+    const s = new Set<string>()
+    if (!f.practica.trim()) s.add('practica')
+    if (!f.fecha) s.add('fecha')
+    if (!f.inicio) s.add('inicio')
+    if (!f.fin) s.add('fin')
+    if (!nombreDoc.trim()) s.add('nombreDoc')
+    if (!CELULAR_OK.test(celular.trim())) s.add('celular')
+    if (!f.campus_id) s.add('campus_id')
+    if (!f.programa.trim()) s.add('programa')
+    if (!f.curso.trim()) s.add('curso')
+    if (num(f.agua) === null || (num(f.agua) ?? 0) < 0) s.add('agua')
+    return s
+  }, [f, nombreDoc, celular])
+
+  const inputBase = 'w-full rounded-md border px-2.5 py-1.5 text-sm transition-colors focus:outline-none'
+  const inputCssFor = (campo?: string) => {
+    const err = campo && mostrarErrores && faltanSet.has(campo)
+    return `${inputBase} ${err
+      ? 'border-danger bg-danger-soft/40 focus:border-danger'
+      : 'border-border-strong bg-surface hover:border-fg-muted focus:border-accent'}`
+  }
+  const inputCss = inputCssFor()
+  const req = <span className="text-danger"> *</span>
+  const lbl = 'mb-1 block text-xs font-medium text-fg-muted'
 
   const tablaLineas = (tipo: 'r' | 'm', ls: Linea[]) => (
     <div className="overflow-x-auto rounded-lg border">
@@ -278,13 +300,13 @@ export default function NuevaSesion() {
           {contactoCompleto && !editandoContacto ? (
             <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-gray-700">
               <span>{perfil?.nombre} · {perfil?.email} · {perfil?.celular}</span>
-              <button type="button" onClick={() => setEditandoContacto(true)} className="text-brand-600 hover:underline">Cambiar</button>
+              <button type="button" onClick={() => setEditandoContacto(true)} className="text-accent font-medium hover:underline">Cambiar</button>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-3">
               <div>
                 <label className={lbl}>Nombre completo{req}</label>
-                <input value={nombreDoc} onChange={(e) => setNombreDoc(e.target.value)} className={inputCss} />
+                <input id="f-nombreDoc" value={nombreDoc} onChange={(e) => setNombreDoc(e.target.value)} className={inputCssFor('nombreDoc')} />
               </div>
               <div>
                 <label className={lbl}>Correo electrónico</label>
@@ -292,7 +314,7 @@ export default function NuevaSesion() {
               </div>
               <div>
                 <label className={lbl}>Celular{req}</label>
-                <input value={celular} onChange={(e) => setCelular(e.target.value)} inputMode="tel" placeholder="3001234567" className={inputCss} />
+                <input id="f-celular" value={celular} onChange={(e) => setCelular(e.target.value)} inputMode="tel" placeholder="3001234567" className={inputCssFor('celular')} />
               </div>
               <p className="text-xs text-gray-500 sm:col-span-3">Se guarda en su perfil: solo lo escribe esta vez.</p>
             </div>
@@ -301,40 +323,40 @@ export default function NuevaSesion() {
 
         <div>
           <label className={lbl}>Nombre de la práctica de laboratorio{req}</label>
-          <input list="sug-practicas" value={f.practica} onChange={(e) => set('practica', e.target.value)}
-            placeholder="Escriba el nombre o elija una práctica anterior" className={inputCss} />
+          <input id="f-practica" list="sug-practicas" value={f.practica} onChange={(e) => set('practica', e.target.value)}
+            placeholder="Escriba el nombre o elija una práctica anterior" className={inputCssFor('practica')} />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <label className={lbl}>Campus{req}</label>
-            <select value={f.campus_id} onChange={(e) => set('campus_id', e.target.value)} className={inputCss}>
+            <select id="f-campus_id" value={f.campus_id} onChange={(e) => set('campus_id', e.target.value)} className={inputCssFor('campus_id')}>
               <option value="">Seleccionar…</option>
               {campus?.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
             </select>
           </div>
           <div>
             <label className={lbl}>Programa académico{req}</label>
-            <input list="sug-programas" value={f.programa} onChange={(e) => set('programa', e.target.value)} className={inputCss} />
+            <input id="f-programa" list="sug-programas" value={f.programa} onChange={(e) => set('programa', e.target.value)} className={inputCssFor('programa')} />
           </div>
           <div>
             <label className={lbl}>Nombre del curso{req}</label>
-            <input list="sug-cursos" value={f.curso} onChange={(e) => set('curso', e.target.value)} className={inputCss} />
+            <input id="f-curso" list="sug-cursos" value={f.curso} onChange={(e) => set('curso', e.target.value)} className={inputCssFor('curso')} />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <label className={lbl}>Fecha de realización{req}</label>
-            <input type="date" value={f.fecha} onChange={(e) => set('fecha', e.target.value)} className={inputCss} />
+            <input id="f-fecha" type="date" value={f.fecha} onChange={(e) => set('fecha', e.target.value)} className={inputCssFor('fecha')} />
           </div>
           <div>
             <label className={lbl}>Hora de inicio{req}</label>
-            <input type="time" value={f.inicio} onChange={(e) => set('inicio', e.target.value)} className={inputCss} />
+            <input id="f-inicio" type="time" value={f.inicio} onChange={(e) => set('inicio', e.target.value)} className={inputCssFor('inicio')} />
           </div>
           <div>
             <label className={lbl}>Hora de fin{req}</label>
-            <input type="time" value={f.fin} onChange={(e) => set('fin', e.target.value)} className={inputCss} />
+            <input id="f-fin" type="time" value={f.fin} onChange={(e) => set('fin', e.target.value)} className={inputCssFor('fin')} />
           </div>
         </div>
 
@@ -372,7 +394,7 @@ export default function NuevaSesion() {
           </div>
         ))}
         <button type="button" onClick={() => setOtras((p) => [...p, jornadaVacia()])}
-          className="text-sm font-medium text-brand-700 hover:underline">
+          className="text-sm font-medium text-accent font-medium hover:underline">
           + Añadir otra jornada (por ejemplo, la tarde)
         </button>
 
@@ -387,7 +409,7 @@ export default function NuevaSesion() {
           </div>
           <div>
             <label className={lbl}>Agua destilada estimada por sesión (litros){req}</label>
-            <input type="number" min="0" step="any" value={f.agua} onChange={(e) => set('agua', e.target.value)} className={inputCss} />
+            <input id="f-agua" type="number" min="0" step="any" value={f.agua} onChange={(e) => set('agua', e.target.value)} className={inputCssFor('agua')} />
           </div>
         </div>
 
@@ -399,14 +421,14 @@ export default function NuevaSesion() {
           </p>
           {tablaLineas('r', reactivos)}
           <button type="button" onClick={() => setReactivos((p) => [...p, lineaVacia()])}
-            className="text-sm font-medium text-brand-700 hover:underline">+ Añadir reactivo</button>
+            className="text-sm font-medium text-accent font-medium hover:underline">+ Añadir reactivo</button>
         </section>
 
         <section className="space-y-2">
           <h2 className="text-base font-semibold text-gray-800">Equipos o vidriería</h2>
           {tablaLineas('m', materiales)}
           <button type="button" onClick={() => setMateriales((p) => [...p, lineaVacia()])}
-            className="text-sm font-medium text-brand-700 hover:underline">+ Añadir equipo o vidriería</button>
+            className="text-sm font-medium text-accent font-medium hover:underline">+ Añadir equipo o vidriería</button>
         </section>
 
         <div>
@@ -414,28 +436,47 @@ export default function NuevaSesion() {
           <textarea rows={3} value={f.observaciones} onChange={(e) => set('observaciones', e.target.value)} className={inputCss} />
         </div>
 
-        <p className="text-xs text-gray-500">
+        <p className="rounded-md border border-info bg-info-soft px-3 py-2 text-xs text-info">
           El laboratorio no se solicita: lo asigna la persona líder de laboratorios o el técnico al aprobar.
         </p>
 
-        {mensaje && <p className="rounded-md bg-red-50 p-2 text-sm text-red-600">{mensaje}</p>}
-        {faltanEnvio.length > 0 && (
-          <p className="text-xs text-gray-500">Para enviar falta: {faltanEnvio.join(', ')}.</p>
+        {mensaje && <p className="rounded-md border border-danger bg-danger-soft px-3 py-2 text-sm text-danger">{mensaje}</p>}
+        {mostrarErrores && faltanSet.size > 0 && (
+          <p className="rounded-md border border-warn bg-warn-soft px-3 py-2 text-sm text-warn">
+            Faltan datos obligatorios. Los campos resaltados en rojo son los que debe completar.
+          </p>
         )}
 
-        <div className="flex flex-wrap gap-3 pt-1">
+        <div className="flex flex-wrap gap-3 pt-2 border-t border-border mt-4">
           <button type="button" onClick={() => guardar('borrador')}
             disabled={crear.isPending || faltan.length > 0}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+            className="btn">
             Guardar borrador
           </button>
-          <button type="button" onClick={() => guardar('solicitada')}
-            disabled={crear.isPending || faltanEnvio.length > 0}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
+          <button type="button"
+            onClick={() => {
+              if (faltanEnvio.length > 0) {
+                setMostrarErrores(true)
+                setTimeout(() => {
+                  const campos = ['nombreDoc','celular','practica','campus_id','programa','curso','fecha','inicio','fin','agua']
+                  for (const k of campos) {
+                    if (faltanSet.has(k)) {
+                      const el = document.getElementById('f-' + k) as HTMLElement | null
+                      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); (el as HTMLInputElement).focus?.() }
+                      break
+                    }
+                  }
+                }, 50)
+                return
+              }
+              guardar('solicitada')
+            }}
+            disabled={crear.isPending}
+            className="btn btn-primary">
             Enviar solicitud
           </button>
           <button type="button" onClick={() => navigate('/sesiones')}
-            className="rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+            className="btn btn-ghost ml-auto">Cancelar</button>
         </div>
       </form>
     </div>

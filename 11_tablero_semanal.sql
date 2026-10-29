@@ -43,15 +43,12 @@ language sql stable security invoker set search_path = public as $$
       and (p_campus is null or s.campus_id = p_campus)
       and s.estado <> 'cancelada'
   ),
+  ids as (select array_agg(id) as a from ses),
   cnt as (
-    select sr.sesion_id,
-           coalesce(sum(case when d.estado in ('falta','sin_cantidad') then 1 else 0 end), 0)::int as faltantes
-    from sesion_reactivos sr
-    join lateral (
-      select (jsonb_array_elements(disponibilidad_sesiones(array[sr.sesion_id]))->'por_reactivo'->>'estado')::text as estado
-    ) d on true
-    where sr.sesion_id in (select id from ses)
-    group by sr.sesion_id
+    select d.sesion_id,
+           count(*) filter (where d.estado in ('falta','sin_cantidad'))::int as faltantes
+    from disponibilidad_sesiones((select a from ids)) d
+    group by d.sesion_id
   )
   select s.id,
          s.inicio, s.fin,
