@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate } from 'react-router-dom'
+import { FlaskConical } from 'lucide-react'
 import { useAuth, esCorreoInstitucional } from '@/hooks/useAuth'
+import { Button, Field, Input, Spinner } from '@/components/ui'
 
 type Modo = 'entrar' | 'crear' | 'olvide'
-
-// Recuperar la contraseña por correo solo funciona si Supabase envía correos (SMTP propio)
 const RECUPERA_POR_CORREO = import.meta.env.VITE_RECUPERACION_POR_CORREO === 'true'
 
 export default function Login() {
@@ -20,20 +20,18 @@ export default function Login() {
 
   if (cargando) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-600 border-t-transparent" />
+      <div className="flex h-screen items-center justify-center bg-bg">
+        <Spinner className="h-6 w-6 text-fg-muted" />
       </div>
     )
   }
-
   if (session) return <Navigate to="/" replace />
 
   const cambiar = (m: Modo) => { setModo(m); setLocal(null); setListo(null); setPassword(''); setConfirmar('') }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setLocal(null)
-    setEnviando(true)
+    setLocal(null); setEnviando(true)
     try {
       if (modo === 'entrar') {
         await iniciarSesion(email, password)
@@ -44,90 +42,95 @@ export default function Login() {
         if (password !== confirmar) return setLocal('Las contraseñas no coinciden.')
         const { error: err, confirmar: porCorreo } = await registrar(nombre, email, password)
         if (err) setLocal(err)
-        else if (porCorreo) setListo(`Le enviamos un mensaje a ${email.trim().toLowerCase()}. Abra el enlace para activar su cuenta y luego ingrese. Si no lo ve, revise la carpeta de correo no deseado.`)
-        // sin confirmación por correo: la sesión ya está abierta y se redirige sola
+        else if (porCorreo) setListo(`Le enviamos un mensaje a ${email.trim().toLowerCase()}. Abra el enlace para activar su cuenta.`)
       } else {
         if (!esCorreoInstitucional(email)) return setLocal('Escriba su correo institucional @udea.edu.co.')
         const err = await recuperarClave(email)
         if (err) setLocal(err)
-        else setListo('Si el correo tiene una cuenta, le enviamos un enlace para crear una nueva contraseña. Revise también el correo no deseado.')
+        else setListo('Si el correo tiene una cuenta registrada, le enviamos un enlace para restablecer la contraseña.')
       }
-    } finally {
-      setEnviando(false)
-    }
+    } finally { setEnviando(false) }
   }
 
-  const css = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500'
-  const lbl = 'mb-1 block text-sm font-medium text-gray-700'
   const titulo = modo === 'entrar' ? 'Ingresar' : modo === 'crear' ? 'Crear cuenta' : 'Recuperar contraseña'
   const mensaje = local ?? (modo === 'entrar' ? error : null)
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
-        <div className="mb-6 text-center">
-          <span className="text-4xl">🧪</span>
-          <h1 className="mt-2 text-2xl font-bold text-brand-900">GesLab</h1>
-          <p className="text-sm text-gray-500">Gestión de Laboratorios · {titulo}</p>
+    <div className="relative flex min-h-screen items-center justify-center bg-bg px-4">
+      {/* Fondo sutil con gradiente radial */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--surface),transparent_60%)]" />
+
+      <div className="relative w-full max-w-sm">
+        <div className="mb-6 flex flex-col items-center text-center">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent text-accent-fg shadow-md">
+            <FlaskConical size={22} />
+          </span>
+          <h1 className="mt-3 text-2xl font-semibold tracking-tight">GesLab</h1>
+          <p className="mt-0.5 text-xs text-fg-muted">Gestión de laboratorios docentes · UdeA Urabá</p>
         </div>
 
-        {listo ? (
-          <div className="space-y-4">
-            <p className="rounded-md bg-green-50 p-3 text-sm text-green-800">{listo}</p>
-            <button onClick={() => cambiar('entrar')} className="w-full rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-              Volver a ingresar
-            </button>
+        <div className="rounded-xl border border-border bg-surface p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-base font-semibold">{titulo}</h2>
+            {modo !== 'entrar' && !listo && (
+              <button onClick={() => cambiar('entrar')} className="text-xs text-fg-muted hover:text-fg">← Volver</button>
+            )}
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {modo === 'crear' && (
-              <div>
-                <label htmlFor="nombre" className={lbl}>Nombre completo</label>
-                <input id="nombre" required value={nombre} onChange={(e) => setNombre(e.target.value)} className={css} autoComplete="name" />
-              </div>
-            )}
-            <div>
-              <label htmlFor="email" className={lbl}>Correo institucional</label>
-              <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={css} placeholder="usuario@udea.edu.co" autoComplete="email" />
+
+          {listo ? (
+            <div className="space-y-3">
+              <p className="rounded-md border border-ok bg-ok-soft px-3 py-2 text-sm text-ok">{listo}</p>
+              <Button className="w-full" onClick={() => cambiar('entrar')}>Volver a ingresar</Button>
             </div>
-            {modo !== 'olvide' && (
-              <div>
-                <label htmlFor="password" className={lbl}>Contraseña</label>
-                <input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className={css}
-                  autoComplete={modo === 'crear' ? 'new-password' : 'current-password'} minLength={modo === 'crear' ? 8 : undefined} />
-                {modo === 'crear' && <p className="mt-1 text-xs text-gray-500">Mínimo 8 caracteres.</p>}
-              </div>
-            )}
-            {modo === 'crear' && (
-              <div>
-                <label htmlFor="confirmar" className={lbl}>Repita la contraseña</label>
-                <input id="confirmar" type="password" required value={confirmar} onChange={(e) => setConfirmar(e.target.value)} className={css} autoComplete="new-password" />
-              </div>
-            )}
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-3">
+              {modo === 'crear' && (
+                <Field label="Nombre completo">
+                  <Input id="nombre" required value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" />
+                </Field>
+              )}
+              <Field label="Correo institucional">
+                <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                  placeholder="usuario@udea.edu.co" autoComplete="email" />
+              </Field>
+              {modo !== 'olvide' && (
+                <Field label="Contraseña" hint={modo === 'crear' ? 'mín. 8 caracteres' : undefined}>
+                  <Input id="password" type="password" required value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete={modo === 'crear' ? 'new-password' : 'current-password'}
+                    minLength={modo === 'crear' ? 8 : undefined} />
+                </Field>
+              )}
+              {modo === 'crear' && (
+                <Field label="Repita la contraseña">
+                  <Input id="confirmar" type="password" required value={confirmar} onChange={(e) => setConfirmar(e.target.value)} autoComplete="new-password" />
+                </Field>
+              )}
 
-            {mensaje && <p className="rounded-md bg-red-50 p-2 text-sm text-red-600">{mensaje}</p>}
+              {mensaje && <p className="rounded-md border border-danger bg-danger-soft px-3 py-2 text-sm text-danger">{mensaje}</p>}
 
-            <button type="submit" disabled={enviando} className="w-full rounded-lg bg-brand-600 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
-              {enviando ? 'Procesando…' : modo === 'entrar' ? 'Ingresar' : modo === 'crear' ? 'Crear cuenta' : 'Enviar enlace'}
-            </button>
+              <Button type="submit" variant="primary" className="w-full" disabled={enviando}>
+                {enviando && <Spinner />}
+                {enviando ? 'Procesando…' : modo === 'entrar' ? 'Ingresar' : modo === 'crear' ? 'Crear cuenta' : 'Enviar enlace'}
+              </Button>
 
-            <div className="flex flex-col items-center gap-1 text-sm">
               {modo === 'entrar' && (
-                <>
+                <div className="flex items-center justify-between pt-1 text-xs">
                   {RECUPERA_POR_CORREO ? (
-                    <button type="button" onClick={() => cambiar('olvide')} className="text-brand-600 hover:underline">Olvidé mi contraseña</button>
+                    <button type="button" onClick={() => cambiar('olvide')} className="text-fg-muted hover:text-fg">¿Olvidó la contraseña?</button>
                   ) : (
-                    <span className="text-xs text-gray-500">¿Olvidó su contraseña? Solicítela al administrador.</span>
+                    <span className="text-fg-faint">¿Olvidó la contraseña? Pídala al administrador.</span>
                   )}
-                  <button type="button" onClick={() => cambiar('crear')} className="text-brand-600 hover:underline">Crear cuenta</button>
-                </>
+                  <button type="button" onClick={() => cambiar('crear')} className="text-fg-muted hover:text-fg">Crear cuenta</button>
+                </div>
               )}
-              {modo !== 'entrar' && (
-                <button type="button" onClick={() => cambiar('entrar')} className="text-brand-600 hover:underline">← Volver a ingresar</button>
-              )}
-            </div>
-          </form>
-        )}
+            </form>
+          )}
+        </div>
+
+        <p className="mt-4 text-center text-xs text-fg-faint">
+          Solo correos @udea.edu.co · UdeA sede Urabá
+        </p>
       </div>
     </div>
   )
