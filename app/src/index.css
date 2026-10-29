@@ -2,89 +2,90 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---------- Design tokens: Minimalista moderno, denso ---------- */
+/* ---------- Design tokens: paleta institucional UdeA ---------- */
+/* Verde profundo UdeA + crema cálido · alto contraste · modo claro/oscuro */
 :root {
-  --bg:            #fafafa;
+  --bg:            #f5efe0;   /* crema institucional */
   --surface:       #ffffff;
-  --surface-2:     #f4f4f5;
-  --muted:         #f4f4f5;
-  --fg:            #09090b;
-  --fg-muted:      #52525b;
-  --fg-faint:      #a1a1aa;
-  --border:        #e4e4e7;
-  --border-strong: #d4d4d8;
+  --surface-2:     #ede6d2;
+  --muted:         #ede6d2;
+  --fg:            #000000;   /* contraste AAA sobre crema y blanco */
+  --fg-muted:      #3d453e;
+  --fg-faint:      #7a827b;
+  --border:        #d6cdb3;
+  --border-strong: #b8ac8c;
 
-  --accent:        #0a0a0a;       /* botón primario: casi negro, estilo Linear */
+  --accent:        #0f4c35;   /* verde institucional UdeA */
   --accent-fg:     #ffffff;
-  --accent-soft:   #e4e4e7;
+  --accent-soft:   #d4e4da;
 
-  --info:          #2563eb;       /* enlaces, estados neutros */
+  --info:          #1e3a8a;   /* azul marino, complementa el verde */
   --info-soft:     #dbeafe;
   --ok:            #15803d;
   --ok-soft:       #dcfce7;
-  --warn:          #b45309;
+  --warn:          #92400e;
   --warn-soft:     #fef3c7;
-  --danger:        #b91c1c;
+  --danger:        #991b1b;
   --danger-soft:   #fee2e2;
 
-  --ring:          0 0 0 2px rgba(37, 99, 235, 0.4);
+  --ring:          0 0 0 2px rgba(15, 76, 53, 0.5);
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg:            #09090b;
-  --surface:       #111113;
-  --surface-2:     #1a1a1d;
-  --muted:         #1a1a1d;
-  --fg:            #fafafa;
-  --fg-muted:      #a1a1aa;
-  --fg-faint:      #71717a;
-  --border:        #27272a;
-  --border-strong: #3f3f46;
+  --bg:            #0a100d;
+  --surface:       #121a16;
+  --surface-2:     #1a241f;
+  --muted:         #1a241f;
+  --fg:            #f5efe0;   /* crema sobre fondo oscuro: alto contraste */
+  --fg-muted:      #b8c2b5;
+  --fg-faint:      #7a857c;
+  --border:        #2a3630;
+  --border-strong: #3d4a43;
 
-  --accent:        #fafafa;
-  --accent-fg:     #09090b;
-  --accent-soft:   #27272a;
+  --accent:        #52b088;   /* verde claro UdeA para dark */
+  --accent-fg:     #0a100d;
+  --accent-soft:   rgba(82,176,136,0.18);
 
-  --info:          #60a5fa;
-  --info-soft:     rgba(96,165,250,0.15);
+  --info:          #93c5fd;
+  --info-soft:     rgba(147,197,253,0.18);
   --ok:            #4ade80;
-  --ok-soft:       rgba(74,222,128,0.12);
+  --ok-soft:       rgba(74,222,128,0.15);
   --warn:          #fbbf24;
-  --warn-soft:     rgba(251,191,36,0.14);
+  --warn-soft:     rgba(251,191,36,0.15);
   --danger:        #f87171;
-  --danger-soft:   rgba(248,113,113,0.14);
+  --danger-soft:   rgba(248,113,113,0.15);
 
-  --ring:          0 0 0 2px rgba(96, 165, 250, 0.45);
+  --ring:          0 0 0 2px rgba(82, 176, 136, 0.55);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:            #09090b;
-    --surface:       #111113;
-    --surface-2:     #1a1a1d;
-    --muted:         #1a1a1d;
-    --fg:            #fafafa;
-    --fg-muted:      #a1a1aa;
-    --fg-faint:      #71717a;
-    --border:        #27272a;
-    --border-strong: #3f3f46;
+    --bg:            #0a100d;
+    --surface:       #121a16;
+    --surface-2:     #1a241f;
+    --muted:         #1a241f;
+    --fg:            #f5efe0;
+    --fg-muted:      #b8c2b5;
+    --fg-faint:      #7a857c;
+    --border:        #2a3630;
+    --border-strong: #3d4a43;
 
-    --accent:        #fafafa;
-    --accent-fg:     #09090b;
-    --accent-soft:   #27272a;
+    --accent:        #52b088;
+    --accent-fg:     #0a100d;
+    --accent-soft:   rgba(82,176,136,0.18);
 
-    --info:          #60a5fa;
-    --info-soft:     rgba(96,165,250,0.15);
+    --info:          #93c5fd;
+    --info-soft:     rgba(147,197,253,0.18);
     --ok:            #4ade80;
-    --ok-soft:       rgba(74,222,128,0.12);
+    --ok-soft:       rgba(74,222,128,0.15);
     --warn:          #fbbf24;
-    --warn-soft:     rgba(251,191,36,0.14);
+    --warn-soft:     rgba(251,191,36,0.15);
     --danger:        #f87171;
-    --danger-soft:   rgba(248,113,113,0.14);
+    --danger-soft:   rgba(248,113,113,0.15);
 
-    --ring:          0 0 0 2px rgba(96, 165, 250, 0.45);
+    --ring:          0 0 0 2px rgba(82, 176, 136, 0.55);
     color-scheme: dark;
   }
 }
@@ -95,41 +96,33 @@
     background: var(--bg);
     color: var(--fg);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 13px;
-    line-height: 1.45;
+    font-size: 13.5px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-feature-settings: 'cv11', 'ss01';
   }
   body { min-height: 100vh; }
 
-  /* números siempre tabulares para alineación en tablas y KPIs */
+  h1, h2, h3, h4 { color: var(--fg); letter-spacing: -0.01em; }
+
   .tabular-nums, table, input[type="number"] { font-variant-numeric: tabular-nums; }
 
-  /* scrollbars discretas */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; border: 2px solid var(--bg); }
   ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
 
-  /* focus ring consistente */
-  :focus-visible {
-    outline: 0;
-    box-shadow: var(--ring);
-    border-radius: 4px;
-  }
-
-  /* selección */
-  ::selection { background: var(--info-soft); color: var(--fg); }
+  :focus-visible { outline: 0; box-shadow: var(--ring); border-radius: 4px; }
+  ::selection { background: var(--accent-soft); color: var(--fg); }
 
   a { color: inherit; }
 }
 
-/* ---------- Mapeo de clases heredadas (gris Tailwind) a tokens ---------- */
-/* Permite que páginas que todavía usan bg-white / gray-* funcionen en ambos temas */
+/* ---------- Mapeo de clases heredadas Tailwind → tokens ---------- */
 @layer utilities {
-  .bg-white { background-color: var(--surface) !important; }
-  .bg-gray-50 { background-color: var(--bg) !important; }
+  .bg-white  { background-color: var(--surface) !important; }
+  .bg-gray-50  { background-color: var(--bg) !important; }
   .bg-gray-100 { background-color: var(--muted) !important; }
   .bg-gray-200 { background-color: var(--border) !important; }
 
@@ -146,48 +139,52 @@
   .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border) !important; }
   .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border) !important; }
 
-  .hover\:bg-gray-50:hover { background-color: var(--muted) !important; }
+  .hover\:bg-gray-50:hover  { background-color: var(--muted) !important; }
   .hover\:bg-gray-100:hover { background-color: var(--surface-2) !important; }
 
   /* colores semánticos legacy */
   .text-green-700 { color: var(--ok) !important; }
-  .text-amber-700 { color: var(--warn) !important; }
-  .text-red-700 { color: var(--danger) !important; }
-  .text-blue-700, .text-blue-600 { color: var(--info) !important; }
-  .bg-green-100 { background-color: var(--ok-soft) !important; }
-  .bg-amber-100 { background-color: var(--warn-soft) !important; }
-  .bg-yellow-100 { background-color: var(--warn-soft) !important; }
-  .bg-red-100 { background-color: var(--danger-soft) !important; }
-  .bg-blue-50, .bg-blue-100 { background-color: var(--info-soft) !important; }
   .text-green-800 { color: var(--ok) !important; }
+  .text-amber-700 { color: var(--warn) !important; }
   .text-amber-800 { color: var(--warn) !important; }
+  .text-red-600, .text-red-700 { color: var(--danger) !important; }
   .text-red-800 { color: var(--danger) !important; }
-  .text-blue-800 { color: var(--info) !important; }
-  .border-blue-600 { border-color: var(--info) !important; }
-  .bg-blue-600 { background-color: var(--info) !important; }
-  .hover\:bg-blue-700:hover { background-color: var(--info) !important; filter: brightness(1.1); }
+  .text-blue-600, .text-blue-700, .text-blue-800 { color: var(--accent) !important; }
+
+  .bg-green-100 { background-color: var(--ok-soft) !important; }
+  .bg-amber-100, .bg-yellow-100 { background-color: var(--warn-soft) !important; }
+  .bg-red-50, .bg-red-100 { background-color: var(--danger-soft) !important; }
+  .bg-blue-50, .bg-blue-100 { background-color: var(--accent-soft) !important; }
+
+  .border-blue-600 { border-color: var(--accent) !important; }
+  .bg-blue-600 { background-color: var(--accent) !important; color: var(--accent-fg) !important; }
+  .hover\:bg-blue-700:hover { background-color: var(--accent) !important; filter: brightness(1.1); }
+
+  .border-green-600 { border-color: var(--ok) !important; }
+  .bg-green-600 { background-color: var(--ok) !important; color: #fff !important; }
 }
 
 /* ---------- Componentes utilitarios ---------- */
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-all;
     border-color: var(--border-strong);
     background: var(--surface);
     color: var(--fg);
   }
-  .btn:hover { background: var(--muted); }
+  .btn:hover { background: var(--muted); border-color: var(--fg-muted); }
   .btn:disabled { opacity: 0.55; cursor: not-allowed; }
   .btn-primary {
     background: var(--accent); color: var(--accent-fg); border-color: var(--accent);
+    box-shadow: 0 1px 2px rgba(15,76,53,0.15);
   }
-  .btn-primary:hover { background: var(--accent); filter: brightness(1.1); }
+  .btn-primary:hover { background: var(--accent); filter: brightness(1.1); border-color: var(--accent); }
   .btn-ghost { border-color: transparent; background: transparent; }
-  .btn-ghost:hover { background: var(--muted); }
+  .btn-ghost:hover { background: var(--muted); border-color: transparent; }
   .btn-danger {
     background: var(--danger); color: #fff; border-color: var(--danger);
   }
-  .btn-danger:hover { filter: brightness(1.08); }
+  .btn-danger:hover { filter: brightness(1.08); border-color: var(--danger); }
   .btn-sm { @apply px-2 py-1 text-xs; }
   .btn-lg { @apply px-4 py-2 text-base; }
 
@@ -198,7 +195,8 @@
     color: var(--fg);
   }
   .input::placeholder { color: var(--fg-faint); }
-  .input:hover { border-color: var(--fg-faint); }
+  .input:hover { border-color: var(--fg-muted); }
+  .input:focus { border-color: var(--accent); }
 
   .card {
     @apply rounded-lg border;
@@ -215,14 +213,10 @@
   .badge-danger { background: var(--danger-soft); color: var(--danger); }
   .badge-info   { background: var(--info-soft); color: var(--info); }
 
-  .page-title { @apply text-2xl font-semibold tracking-tight; letter-spacing: -0.015em; }
+  .page-title { @apply text-2xl font-semibold tracking-tight; letter-spacing: -0.015em; color: var(--fg); }
   .page-sub   { @apply text-sm; color: var(--fg-muted); }
 
-  .table-grid {
-    @apply w-full text-sm;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
+  .table-grid { @apply w-full text-sm; border-collapse: separate; border-spacing: 0; }
   .table-grid thead th {
     @apply px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide;
     color: var(--fg-muted);
@@ -233,9 +227,10 @@
   .table-grid tbody td {
     @apply px-3 py-2;
     border-bottom: 1px solid var(--border);
+    color: var(--fg);
   }
   .table-grid tbody tr:hover td { background: var(--muted); }
 
-  .link { color: var(--info); }
+  .link { color: var(--accent); font-weight: 500; }
   .link:hover { text-decoration: underline; }
 }
