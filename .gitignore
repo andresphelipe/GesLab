@@ -1,0 +1,39 @@
+# dependencias
+node_modules/
+app/node_modules/
+
+# builds
+dist/
+app/dist/
+*.local
+
+# entornos locales (NUNCA subir las keys al repositorio)
+.env
+.env.local
+.env.production.local
+app/.env
+app/.env.local
+
+# editor / sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
+
+# scripts y datos temporales de desarrollo
+_patch_*.py
+_exportar.*
+_tmp*/
+*_to_delete/
+
+# caches
+.cache/
+.vite/
+
+# scratch
+app/vite.config.ts.timestamp-*
+*.whl
+/package-lock.json
+revision_importacion.xlsx
