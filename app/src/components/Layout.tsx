@@ -46,7 +46,7 @@ export default function Layout() {
       <Sidebar items={items} pathname={pathname} open={open} onClose={() => setOpen(false)} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-12 items-center gap-3 border-b border-border bg-surface/80 px-3 backdrop-blur-sm lg:px-5">
+        <header className="flex h-12 items-center gap-3 border-b border-border bg-surface px-3 lg:px-5">
           <button
             onClick={() => setOpen(true)}
             className="rounded p-1.5 text-fg-muted hover:bg-muted lg:hidden"
@@ -63,6 +63,7 @@ export default function Layout() {
             />
           </div>
         </header>
+        <div className="strip-udea" />
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-6">
           {perfil?.rol === 'estudiante' ? <CuentaPendiente /> : <Outlet />}
@@ -80,23 +81,25 @@ function Sidebar({ items, pathname, open, onClose }: {
       {open && <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={onClose} />}
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-40 flex w-[232px] flex-col border-r border-border bg-surface transition-transform lg:static lg:translate-x-0',
+          'sidebar-udea fixed inset-y-0 left-0 z-40 flex w-[232px] flex-col border-r transition-transform lg:static lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',
         )}>
-        <div className="flex h-12 items-center justify-between border-b border-border px-4">
+        <div className="sidebar-brand flex h-12 items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight" onClick={onClose}>
-            <span className="flex h-6 w-6 items-center justify-center rounded bg-accent text-accent-fg text-xs font-bold">G</span>
-            <span>GesLab</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded bg-[color:var(--sidebar-accent)] text-[color:var(--sidebar-bg)] text-xs font-bold">G</span>
+            <span style={{ color: 'var(--sidebar-fg)' }}>GesLab</span>
           </Link>
           <button
             onClick={onClose}
-            className="rounded p-1 text-fg-muted hover:bg-muted lg:hidden"
+            className="rounded p-1 hover:bg-black/20 lg:hidden"
+            style={{ color: 'var(--sidebar-fg-muted)' }}
             aria-label="Cerrar menú"
           ><X size={16} /></button>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-2 py-3">
-          <div className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-wider text-fg-faint">Navegación</div>
+          <div className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-wider"
+            style={{ color: 'var(--sidebar-fg-faint)' }}>Navegación</div>
           <ul className="space-y-0.5">
             {items.map(({ to, label, Icon }) => {
               const active = to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(to + '/')
@@ -106,12 +109,10 @@ function Sidebar({ items, pathname, open, onClose }: {
                     to={to}
                     onClick={onClose}
                     className={clsx(
-                      'group flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors',
-                      active
-                        ? 'bg-muted text-fg font-medium'
-                        : 'text-fg-muted hover:bg-muted hover:text-fg',
+                      'sidebar-link relative flex items-center gap-2.5 rounded-md pl-3 pr-2 py-1.5 text-sm transition-colors',
+                      active && 'active',
                     )}>
-                    <Icon size={15} className={clsx(active ? 'text-fg' : 'text-fg-faint group-hover:text-fg-muted')} />
+                    <Icon size={15} />
                     {label}
                   </Link>
                 </li>
@@ -120,8 +121,9 @@ function Sidebar({ items, pathname, open, onClose }: {
           </ul>
         </nav>
 
-        <div className="border-t border-border px-3 py-2 text-xs text-fg-faint">
-          UdeA sede Urabá
+        <div className="sidebar-footer px-3 py-2.5 text-[11px] leading-tight">
+          <div style={{ color: 'var(--sidebar-fg-muted)' }} className="font-medium">Universidad de Antioquia</div>
+          <div>Sede Urabá · Turbo · Apartadó · Carepa</div>
         </div>
       </aside>
     </>

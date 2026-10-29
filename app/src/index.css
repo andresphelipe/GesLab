@@ -28,6 +28,16 @@
   --danger:        #991b1b;
   --danger-soft:   #fee2e2;
 
+
+  --sidebar-bg:        #0f4c35;
+  --sidebar-bg-2:      #0a3d2b;
+  --sidebar-fg:        #f5efe0;
+  --sidebar-fg-muted:  #a9bfb3;
+  --sidebar-fg-faint:  #7a8e82;
+  --sidebar-border:    #0a3d2b;
+  --sidebar-active-bg: #163f31;
+  --sidebar-active-fg: #ffffff;
+  --sidebar-accent:    #d4a84a;   /* dorado UdeA para detalles */
   --ring:          0 0 0 2px rgba(15, 76, 53, 0.5);
   color-scheme: light;
 }
@@ -56,6 +66,26 @@
   --danger:        #f87171;
   --danger-soft:   rgba(248,113,113,0.15);
 
+
+    --sidebar-bg:        #081512;
+    --sidebar-bg-2:      #0a1a16;
+    --sidebar-fg:        #e8ead9;
+    --sidebar-fg-muted:  #8a9c90;
+    --sidebar-fg-faint:  #5a6c62;
+    --sidebar-border:    #1a2a24;
+    --sidebar-active-bg: #163f31;
+    --sidebar-active-fg: #ffffff;
+    --sidebar-accent:    #d4a84a;
+
+    --sidebar-bg:        #081512;
+    --sidebar-bg-2:      #0a1a16;
+    --sidebar-fg:        #e8ead9;
+    --sidebar-fg-muted:  #8a9c90;
+    --sidebar-fg-faint:  #5a6c62;
+    --sidebar-border:    #1a2a24;
+    --sidebar-active-bg: #163f31;
+    --sidebar-active-fg: #ffffff;
+    --sidebar-accent:    #d4a84a;
   --ring:          0 0 0 2px rgba(82, 176, 136, 0.55);
   color-scheme: dark;
 }
@@ -234,3 +264,26 @@
   .link { color: var(--accent); font-weight: 500; }
   .link:hover { text-decoration: underline; }
 }
+
+
+/* ---------- Strip institucional (dorado UdeA bajo el header) ---------- */
+.strip-udea { height: 3px; background: linear-gradient(90deg, var(--accent), var(--sidebar-accent) 50%, var(--accent)); }
+
+/* Sidebar institucional */
+.sidebar-udea {
+  background: linear-gradient(180deg, var(--sidebar-bg), var(--sidebar-bg-2));
+  color: var(--sidebar-fg);
+  border-color: var(--sidebar-border);
+}
+.sidebar-link { color: var(--sidebar-fg-muted); }
+.sidebar-link:hover { background: var(--sidebar-active-bg); color: var(--sidebar-fg); }
+.sidebar-link.active { background: var(--sidebar-active-bg); color: var(--sidebar-active-fg); font-weight: 500; }
+.sidebar-link.active::before {
+  content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px;
+  background: var(--sidebar-accent); border-radius: 0 3px 3px 0;
+}
+.sidebar-brand {
+  background: var(--sidebar-bg-2);
+  border-bottom: 1px solid var(--sidebar-border);
+}
+.sidebar-footer { border-top: 1px solid var(--sidebar-border); color: var(--sidebar-fg-faint); }
