@@ -6,6 +6,7 @@ import {
 } from 'recharts'
 import * as XLSX from 'xlsx'
 import { supabase } from '@/lib/supabase'
+import QueryBuilder from './QueryBuilder'
 import {
   Filtro, useAlertasInforme, useCampusList, useCumplimiento, useHeatmap,
   useKPIs, useProyeccion, useSerieMensual,
@@ -38,7 +39,7 @@ function fmtMes(m: string) {
   const d = new Date(m); return d.toLocaleDateString('es-CO', { month: 'short', year: '2-digit' })
 }
 
-type Tab = 'resumen' | 'reactivos' | 'equipos' | 'vidrieria' | 'docentes' | 'cumplimiento' | 'tendencia' | 'alertas'
+type Tab = 'resumen' | 'reactivos' | 'equipos' | 'vidrieria' | 'docentes' | 'cumplimiento' | 'tendencia' | 'alertas' | 'dinamico'
 
 export default function Informes() {
   const [filtro, setFiltro] = useState<Filtro>({
@@ -71,6 +72,7 @@ export default function Informes() {
           ['cumplimiento', 'Cumplimiento'],
           ['tendencia', 'Tendencia y proyección'],
           ['alertas', 'Alertas e inventario'],
+          ['dinamico', 'Informes dinámicos'],
         ] as [Tab, string][]).map(([k, l]) => (
           <button
             key={k} onClick={() => setTab(k)}
@@ -88,6 +90,7 @@ export default function Informes() {
       {tab === 'cumplimiento' && <TabCumplimiento f={filtro} />}
       {tab === 'tendencia' && <TabTendencia f={filtro} />}
       {tab === 'alertas' && <TabAlertas campus_id={filtro.campus_id} />}
+      {tab === 'dinamico' && <QueryBuilder />}
     </div>
   )
 }
